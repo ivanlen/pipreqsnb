@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import argparse
 import ast
 import glob
@@ -34,7 +37,14 @@ def run_pipreqs(args):
     os.system('pipreqs {}'.format(args))
 
 
-def main(path, extra_args):
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('path')
+    args, unknown_args = parser.parse_known_args()
+    if len(vars(args)) != 1:
+        raise Exception('only one argument supported: path')
+    path = args.path
+
     ipynb_files = [f for f in glob.glob(path + "**/*.ipynb", recursive=True)]
     temp_file_name = '{}/_pipreqsnb_temp_file.py'.format(path)
     imports = []
@@ -50,7 +60,7 @@ def main(path, extra_args):
         with open(temp_file_name, 'a') as temp_file:
             for import_line in imports:
                 temp_file.write('{}\n'.format(import_line))
-        pipreqs_args = generate_pipreqs_str(path, extra_args)
+        pipreqs_args = generate_pipreqs_str(path, unknown_args)
         run_pipreqs(pipreqs_args)
         os.remove(temp_file_name)
     except Exception as e:
@@ -60,9 +70,4 @@ def main(path, extra_args):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('path')
-    args, unknown_args = parser.parse_known_args()
-    if len(vars(args)) != 1:
-        raise Exception('only one argument supported: path')
-    main(args.path, unknown_args)
+    main()
