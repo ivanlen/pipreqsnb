@@ -1,21 +1,21 @@
-This is a very simple pipreqs wrapper that supports notebooks.
+## pipreqsnb
 
-All the arguments and options are the same as pipreqs.
+This is a very simple pipreqs wrapper that supports python files and jupyter notebooks.
 
-Please see [pipreqs](https://github.com/bndr/pipreqs/) documenation for more information
+It is very simple to use since all the arguments and options are the same as pipreqs.
 
-Installation
-------------
+__Please__ see [pipreqs](https://github.com/bndr/pipreqs/) documenation for more information.
+
+## Installation
 
     pip install pipreqsnb
 
-Usage
------
+## Usage
 
 
     Usage:
         pipreqs <path> [options] 
-
+    
     Options:
         --use-local           Use ONLY local package info instead of querying PyPI
         --pypi-server <url>   Use custom PyPi server
