@@ -14,7 +14,7 @@ __Please__ see [pipreqs](https://github.com/bndr/pipreqs/) documenation for more
 
 
     Usage:
-        pipreqs <path> [options] 
+        pipreqsnb <path> [options] 
     
     Options:
         --use-local           Use ONLY local package info instead of querying PyPI
