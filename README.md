@@ -1,8 +1,9 @@
 ## pipreqsnb
 
-This is a very simple pipreqs wrapper that supports python files and jupyter notebooks.
+This is a very simple fully compatible pipreqs wrapper that supports python files and jupyter notebooks.
 
-It is very simple to use since all the arguments and options are the same as pipreqs.
+- All the arguments and options are the same as pipreqs.
+- pipreqs commands are still valid
 
 __Please__ see [pipreqs](https://github.com/bndr/pipreqs/) documenation for more information.
 

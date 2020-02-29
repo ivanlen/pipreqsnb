@@ -3,3 +3,4 @@
 *.pyc
 /dist/
 /*.egg-info
+tests/
