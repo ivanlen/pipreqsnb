@@ -15,7 +15,7 @@ __Please__ see [pipreqs](https://github.com/bndr/pipreqs/) documenation for more
 
 
     Usage:
-        pipreqsnb <path> [options] 
+        pipreqsnb [options] <path> 
     
     Options:
         --use-local           Use ONLY local package info instead of querying PyPI
@@ -25,7 +25,7 @@ __Please__ see [pipreqs](https://github.com/bndr/pipreqs/) documenation for more
                               $ export HTTP_PROXY="http://10.10.1.10:3128"
                               $ export HTTPS_PROXY="https://10.10.1.10:1080"
         --debug               Print debug information
-        --ignore <dirs>...    Ignore extra directories
+        --ignore <dirs>...    Ignore extra directories (sepparated by comma no space)
         --encoding <charset>  Use encoding parameter for file open
         --savepath <file>     Save the list of requirements in the given file
         --print               Output the list of requirements in the standard output
