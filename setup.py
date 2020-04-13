@@ -5,7 +5,7 @@ with open('README.md') as readme_file:
 
 setuptools.setup(
     name='pipreqsnb',
-    version='0.1.2',
+    version='0.1.3',
     description='A pipreqs wrapper that supports notebooks',
     url='https://github.com/ivanlen/pipreqsnb',
     author='Ivan Lengyel',
