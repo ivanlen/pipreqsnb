@@ -3,9 +3,12 @@
 
 import argparse
 import ast
-import glob
+import shutil
 import json
 import os
+
+pipreqs_options_store = ['use-local', 'debug', 'print', 'force', 'no-pin']
+pipreqs_options_args = ['pypi-server', 'proxy', 'ignore', 'encoding', 'savepath', 'diff', 'clean']
 
 
 def clean_invalid_lines_from_list_of_lines(list_of_lines):
@@ -27,19 +30,15 @@ def get_import_string_from_source(source):
     return imports
 
 
-def process_known_args(args):
-    proc_args = ''
-    for k, v in vars(args).items():
-        if k != 'path':
-            proc_args += '--{} {} '.format(k, v)
-    proc_args += args.path
-    return proc_args
-
-
-def generate_pipreqs_str(args, options):
-    known_args = process_known_args(args)
-    extra_args = ' '.join(options)
-    return '{} {}'.format(extra_args, known_args)
+def generate_pipreqs_str(args):
+    pipreqs_str = ''
+    for arg, val in args.__dict__.items():
+        if arg in pipreqs_options_store and val:
+            pipreqs_str += ' --{}'.format(arg)
+        elif arg in pipreqs_options_args and val is not None:
+            pipreqs_str += ' --{} {}'.format(arg, val)
+    pipreqs_str += ' {}'.format(args.path)
+    return pipreqs_str
 
 
 def run_pipreqs(args):
@@ -65,16 +64,54 @@ def get_ipynb_files(path, ignore_dirs=None):
     return ipynb_files
 
 
+def path_is_file(path):
+    if os.path.isdir(path):
+        return False, None
+    elif os.path.isfile(path):
+        extension = os.path.splitext(path)[1]
+        if extension == '.py':
+            is_nb = False
+        elif extension == '.ipynb':
+            is_nb = True
+        else:
+            raise Exception('file {} has an invalid extension {}'.format(path, extension))
+        return True, is_nb
+    else:
+        raise Exception('{} if an invalid path'.format(path))
+
+
+def set_requirements_savepath(args):
+    if args.savepath is None:
+        return '{}/{}'.format(os.path.dirname(args.path), 'requirements.txt')
+    return args.savepath
+
+
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--ignore')
-    parser.add_argument('path')
-    args, unknown_args = parser.parse_known_args()
-    path = args.path
+    for preqs_opt in pipreqs_options_store:
+        parser.add_argument('--{}'.format(preqs_opt), action='store_true')
+    for preqs_opt in pipreqs_options_args:
+        parser.add_argument('--{}'.format(preqs_opt), type=str)
+    parser.add_argument('path', nargs='?', default=os.getcwd())
+    args = parser.parse_args()
+    input_path = args.path
+    is_file, is_nb = path_is_file(input_path)
 
+    temp_file_name = '_pipreqsnb_temp_file.py'
+    temp_path_folder_name = '__temp_pipreqsnb_folder'
     ignore_dirs = args.ignore if 'ignore' in args else None
-    ipynb_files = get_ipynb_files(path, ignore_dirs=ignore_dirs)
-    temp_file_name = '{}/_pipreqsnb_temp_file.py'.format(path)
+    if is_file:
+        temp_path = '{}/{}/'.format('./', temp_path_folder_name)
+        if is_nb:
+            ipynb_files = [input_path]
+        else:
+            ipynb_files = []
+            os.makedirs(temp_path, exist_ok=True)
+            shutil.copyfile(input_path, '{}/{}'.format(temp_path, temp_file_name))
+    else:
+        ipynb_files = get_ipynb_files(input_path, ignore_dirs=ignore_dirs)
+        temp_path = '{}/{}/'.format(input_path, temp_path_folder_name)
+    temp_file = '{}/{}'.format(temp_path, temp_file_name)
     imports = []
     for nb_file in ipynb_files:
         nb = json.load(open(nb_file, 'r'))
@@ -84,16 +121,20 @@ def main():
                 source = ''.join(valid_lines)
                 imports += get_import_string_from_source(source)
 
+    if is_file:
+        args.savepath = set_requirements_savepath(args)
+        args.path = temp_path
     try:
-        with open(temp_file_name, 'a') as temp_file:
+        os.makedirs(temp_path, exist_ok=True)
+        with open(temp_file, 'a') as temp_file:
             for import_line in imports:
                 temp_file.write('{}\n'.format(import_line))
-        pipreqs_args = generate_pipreqs_str(args, unknown_args)
+        pipreqs_args = generate_pipreqs_str(args)
         run_pipreqs(pipreqs_args)
-        os.remove(temp_file_name)
+        shutil.rmtree(temp_path)
     except Exception as e:
-        if os.path.isfile(temp_file_name):
-            os.remove(temp_file_name)
+        if os.path.isfile(temp_file):
+            os.remove(temp_file)
         raise e
 
 
