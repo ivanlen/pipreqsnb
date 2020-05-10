@@ -1,4 +1,4 @@
-## pipreqsnb
+# pipreqsnb
 
 This is a very simple fully compatible pipreqs wrapper that supports python files and jupyter notebooks.
 
@@ -6,6 +6,10 @@ This is a very simple fully compatible pipreqs wrapper that supports python file
 - pipreqs commands are still valid
 
 __Please__ see [pipreqs](https://github.com/bndr/pipreqs/) documenation for more information.
+
+## New
+ - v 0.2.1: Single file support. You can either target a single python `file.py` or a single jupyter notebook
+  `notebook.ipynb`, `<path>=single_file_path`.
 
 ## Installation
 
