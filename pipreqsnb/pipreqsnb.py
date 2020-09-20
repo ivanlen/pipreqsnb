@@ -121,6 +121,9 @@ def main():
                 source = ''.join(valid_lines)
                 imports += get_import_string_from_source(source)
 
+    # hack to remove the indents if imports are inside functions
+    imports = [i.lstrip() for i in imports]
+
     if is_file:
         args.savepath = set_requirements_savepath(args)
         args.path = temp_path
