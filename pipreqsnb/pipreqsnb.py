@@ -113,13 +113,20 @@ def main():
         temp_path = '{}/{}/'.format(input_path, temp_path_folder_name)
     temp_file = '{}/{}'.format(temp_path, temp_file_name)
     imports = []
+    open_file_args = {}
+    if args.encoding is not None:
+        open_file_args['encoding'] = args.encoding
     for nb_file in ipynb_files:
-        nb = json.load(open(nb_file, 'r'))
-        for cell in nb['cells']:
-            if cell['cell_type'] == 'code':
-                valid_lines = clean_invalid_lines_from_list_of_lines(cell['source'])
-                source = ''.join(valid_lines)
-                imports += get_import_string_from_source(source)
+        nb = json.load(open(nb_file, 'r', **open_file_args))
+        try:
+            for n_cell, cell in enumerate(nb['cells']):
+                if cell['cell_type'] == 'code':
+                    valid_lines = clean_invalid_lines_from_list_of_lines(cell['source'])
+                    source = ''.join(valid_lines)
+                    imports += get_import_string_from_source(source)
+        except Exception as e:
+            print("Exception occurred while working on file {}, cell {}/{}".format(nb_file, n_cell + 1, len(nb['cells'])))
+            raise e
 
     # hack to remove the indents if imports are inside functions
     imports = [i.lstrip() for i in imports]
