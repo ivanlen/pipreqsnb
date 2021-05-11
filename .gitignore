@@ -5,3 +5,4 @@
 /*.egg-info
 tests/
 .ipynb_checkpoints/
+test_params.txt

@@ -82,7 +82,7 @@ def path_is_file(path):
 
 def set_requirements_savepath(args):
     if args.savepath is None:
-        return '{}/{}'.format(os.path.dirname(args.path), 'requirements.txt')
+        return os.path.join(os.path.dirname(args.path), 'requirements.txt')
     return args.savepath
 
 
@@ -101,17 +101,17 @@ def main():
     temp_path_folder_name = '__temp_pipreqsnb_folder'
     ignore_dirs = args.ignore if 'ignore' in args else None
     if is_file:
-        temp_path = '{}/{}/'.format('./', temp_path_folder_name)
+        temp_saving_path = os.path.join(os.getcwd(), temp_path_folder_name)
         if is_nb:
             ipynb_files = [input_path]
         else:
             ipynb_files = []
-            os.makedirs(temp_path, exist_ok=True)
-            shutil.copyfile(input_path, '{}/{}'.format(temp_path, temp_file_name))
+            os.makedirs(temp_saving_path, exist_ok=True)
+            shutil.copyfile(input_path, os.path.join(temp_saving_path, temp_file_name))
     else:
         ipynb_files = get_ipynb_files(input_path, ignore_dirs=ignore_dirs)
-        temp_path = '{}/{}/'.format(input_path, temp_path_folder_name)
-    temp_file = '{}/{}'.format(temp_path, temp_file_name)
+        temp_saving_path = os.path.join(input_path, temp_path_folder_name)
+    temp_file = os.path.join(temp_saving_path, temp_file_name)
     imports = []
     open_file_args = {}
     if args.encoding is not None:
@@ -125,7 +125,8 @@ def main():
                     source = ''.join(valid_lines)
                     imports += get_import_string_from_source(source)
         except Exception as e:
-            print("Exception occurred while working on file {}, cell {}/{}".format(nb_file, n_cell + 1, len(nb['cells'])))
+            print(
+                "Exception occurred while working on file {}, cell {}/{}".format(nb_file, n_cell + 1, len(nb['cells'])))
             raise e
 
     # hack to remove the indents if imports are inside functions
@@ -133,15 +134,15 @@ def main():
 
     if is_file:
         args.savepath = set_requirements_savepath(args)
-        args.path = temp_path
+        args.path = temp_saving_path
     try:
-        os.makedirs(temp_path, exist_ok=True)
+        os.makedirs(temp_saving_path, exist_ok=True)
         with open(temp_file, 'a') as temp_file:
             for import_line in imports:
                 temp_file.write('{}\n'.format(import_line))
         pipreqs_args = generate_pipreqs_str(args)
         run_pipreqs(pipreqs_args)
-        shutil.rmtree(temp_path)
+        shutil.rmtree(temp_saving_path)
     except Exception as e:
         if os.path.isfile(temp_file):
             os.remove(temp_file)
