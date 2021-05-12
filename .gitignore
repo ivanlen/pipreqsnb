@@ -3,6 +3,6 @@
 *.pyc
 /dist/
 /*.egg-info
-tests/
+#tests/
 .ipynb_checkpoints/
 test_params.txt
