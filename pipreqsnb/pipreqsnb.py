@@ -33,10 +33,10 @@ def get_import_string_from_source(source):
 def generate_pipreqs_str(args):
     pipreqs_str = ''
     for arg, val in args.__dict__.items():
-        if arg in pipreqs_options_store and val:
-            pipreqs_str += ' --{}'.format(arg)
-        elif arg in pipreqs_options_args and val is not None:
-            pipreqs_str += ' --{} {}'.format(arg, val)
+        if arg.replace('_','-') in pipreqs_options_store and val:
+            pipreqs_str += ' --{}'.format(arg.replace('_','-'))
+        elif arg.replace('_','-') in pipreqs_options_args and val is not None:
+            pipreqs_str += ' --{} {}'.format(arg.replace('_','-'), val)
     pipreqs_str += ' {}'.format(args.path)
     return pipreqs_str
 
