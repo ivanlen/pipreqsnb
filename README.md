@@ -10,7 +10,8 @@ __Please__ see [pipreqs](https://github.com/bndr/pipreqs/) documenation for more
 ## New
  - v 0.2.1: Single file support. You can either target a single python `file.py` or a single jupyter notebook
   `notebook.ipynb`, `<path>=single_file_path`.
-
+- v 0.2.4: bugfix: bugfix for args with `-`
+  
 ## Installation
 
     pip install pipreqsnb
