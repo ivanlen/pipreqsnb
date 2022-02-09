@@ -14,6 +14,7 @@ setuptools.setup(
     long_description_content_type='text/markdown',
     long_description=readme,
     license='MIT License',
+    license_files=("LICENSE.txt",),
     packages=setuptools.find_packages(),
     install_requires=['pipreqs'],
     zip_safe=False)
