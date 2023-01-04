@@ -7,7 +7,7 @@ import shutil
 import json
 import os
 
-pipreqs_options_store = ['use-local', 'debug', 'print', 'force', 'no-pin']
+pipreqs_options_store = ['use-local', 'debug', 'print', 'force', 'mode']
 pipreqs_options_args = ['pypi-server', 'proxy', 'ignore', 'encoding', 'savepath', 'diff', 'clean']
 
 
