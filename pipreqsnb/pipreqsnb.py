@@ -7,8 +7,8 @@ import shutil
 import json
 import os
 
-pipreqs_options_store = ['use-local', 'debug', 'print', 'force', 'no-pin']
-pipreqs_options_args = ['pypi-server', 'proxy', 'ignore', 'encoding', 'savepath', 'diff', 'clean']
+pipreqs_options_store = ['use-local', 'debug', 'print', 'force']
+pipreqs_options_args = ['pypi-server', 'proxy', 'ignore', 'encoding', 'savepath', 'diff', 'clean','mode']
 
 
 def clean_invalid_lines_from_list_of_lines(list_of_lines):
